@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.ajudanaweb.mygithubprofile.ui.theme.MyGithubProfileTheme
+import coil.compose.AsyncImage
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,9 +66,10 @@ fun MyBasicInformations() {
                 .height(boxHeight)
 
         ) {
-            Image(
-                painter = painterResource(R.drawable.my_github_profile),
+            AsyncImage(
+                "https://avatars.githubusercontent.com/u/16091365?v=4",
                 contentDescription = "My image profile",
+                placeholder = painterResource(R.drawable.user_placeholder),
                 modifier = Modifier
                     .offset(y = imageHeight / 2)
                     .size(imageHeight)
