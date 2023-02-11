@@ -1,6 +1,7 @@
 package br.com.ajudanaweb.mygithubprofile
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -24,12 +25,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.lifecycleScope
 import br.com.ajudanaweb.mygithubprofile.ui.theme.MyGithubProfileTheme
+import br.com.ajudanaweb.mygithubprofile.webclient.RetrofitInit
 import coil.compose.AsyncImage
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            RetrofitInit().gitHubService.findProfileBy("elfiservice")
+                .let {
+                    Log.i("MainActivity", "onCreate: $it")
+                }
+        }
+
         setContent {
             MyGithubProfileTheme {
                 // A surface container using the 'background' color from the theme
