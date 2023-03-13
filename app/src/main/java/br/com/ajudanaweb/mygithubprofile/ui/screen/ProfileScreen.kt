@@ -25,6 +25,7 @@ import br.com.ajudanaweb.mygithubprofile.webclient.GitHubWebClient
 import coil.compose.AsyncImage
 import br.com.ajudanaweb.mygithubprofile.R
 import br.com.ajudanaweb.mygithubprofile.webclient.model.GitHubProfileWeb
+import br.com.ajudanaweb.mygithubprofile.webclient.model.toProfileUiState
 
 @Composable
 fun ProfileScreen(
@@ -34,12 +35,13 @@ fun ProfileScreen(
     val foundUser by webClient.findProfileBy(user)
         .collectAsState(initial = null)
     foundUser?.let { userProfile ->
-        Profile(userProfile)
+        val state = userProfile.toProfileUiState()
+        Profile(state)
     }
 }
 
 @Composable
-fun Profile(user: GitHubProfileWeb) {
+fun Profile(state: ProfileUiState) {
     Column() {
         val boxHeight = remember {
             150.dp
@@ -61,7 +63,7 @@ fun Profile(user: GitHubProfileWeb) {
 
         ) {
             AsyncImage(
-                user.avatar,
+                state.image,
                 contentDescription = "My image profile",
                 placeholder = painterResource(R.drawable.user_placeholder),
                 modifier = Modifier
@@ -79,13 +81,13 @@ fun Profile(user: GitHubProfileWeb) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = user.name,
+                text = state.name,
                 style = MaterialTheme.typography.h4
             )
-            Text(text = user.login,
+            Text(text = state.user,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold)
-            Text(text = user.bio,
+            Text(text = state.bio,
                 Modifier
                     .padding(
                         start = 8.dp,
@@ -102,6 +104,20 @@ fun Profile(user: GitHubProfileWeb) {
 @Composable
 fun DefaultPreview() {
     MyGithubProfileTheme {
-        ProfileScreen("elfiservice")
+        Profile(
+            state = ProfileUiState(
+                user = "elfiservice",
+                image = "https://avatars.githubusercontent.com/u/8989346?v=4",
+                name = "Armando Jr",
+                bio = "Lover of Web Dev"
+            )
+        )
     }
 }
+
+data class ProfileUiState(
+    val user: String = "",
+    val image: String = "",
+    val name: String = "",
+    val bio: String = ""
+)
